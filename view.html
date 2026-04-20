@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Medicines</title>
+    <style>
+        body {
+            font-family: Arial;
+            background-color: #f4f6f8;
+            text-align: center;
+        }
+
+        table {
+            margin: auto;
+            border-collapse: collapse;
+            width: 80%;
+            background: white;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid gray;
+        }
+
+        th {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .expired { color: red; }
+        .expiring { color: orange; }
+        .safe { color: green; }
+    </style>
+</head>
+<body>
+
+<h2>📋 Medicine List</h2>
+
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Batch</th>
+        <th>Expiry</th>
+        <th>Location</th>
+        <th>Status</th>
+    </tr>
+
+    {% for med in medicines %}
+    <tr>
+        <td>{{ med[0] }}</td>
+        <td>{{ med[1] }}</td>
+        <td>{{ med[2] }}</td>
+        <td>{{ med[3] }}</td>
+        <td>{{ med[4] }}</td>
+
+        {% if med[5] == "Expired" %}
+            <td class="expired">{{ med[5] }}</td>
+        {% elif med[5] == "Expiring Soon" %}
+            <td class="expiring">{{ med[5] }}</td>
+        {% else %}
+            <td class="safe">{{ med[5] }}</td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+</table>
+
+<!-- 🔔 ALERT SOUND -->
+<audio id="alertSound" src="https://www.soundjay.com/buttons/beep-01a.mp3"></audio>
+
+<script>
+    let medicines = JSON.parse('{{ medicines | tojson | safe }}');
+    let hasAlert = false;
+
+    for (let i = 0; i < medicines.length; i++) {
+        if (medicines[i][5] === "Expired" || medicines[i][5] === "Expiring Soon") {
+            hasAlert = true;
+            break;
+        }
+    }
+
+    if (hasAlert) {
+        alert("⚠ Warning! Some medicines are expired or expiring soon!");
+        document.getElementById("alertSound").play();
+    }
+</script>
+
+<br>
+<a href="/"><button>🏠 Back</button></a>
+
+</body>
+</html>
