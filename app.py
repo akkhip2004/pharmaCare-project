@@ -3,6 +3,9 @@ import sqlite3
 from datetime import datetime
 import qrcode
 import os
+# create database automatically if not exists
+if not os.path.exists("database.db"):
+    import database
 import smtplib
 from email.mime.text import MIMEText
 
